@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Burton Suggestion Box</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+  body {
+    min-height:100vh;
+    background: linear-gradient(180deg, #fdfdfd 0%, #f2f7ff 100%);
+    color:#2b2b3a;
+  }
+  .lang-switch {
+    position:absolute; top:22px; right:26px;
+    background:#fff; border:1.5px solid #e0e6f2; border-radius:999px;
+    padding:6px 16px; font-size:13px; font-weight:600; color:#3b6fd4;
+    text-decoration:none; box-shadow:0 2px 8px rgba(60,90,160,0.08);
+  }
+  .lang-switch:hover { background:#eef4ff; }
+  .header { text-align:center; padding: 60px 20px 30px; position:relative; }
+  .badge {
+    display:inline-block;
+    background:#e8f1ff; color:#3b6fd4;
+    padding:6px 18px; border-radius:999px;
+    font-size:13px; font-weight:600; letter-spacing:1px; margin-bottom:16px;
+  }
+  .header h1 { font-size:38px; margin-bottom:10px; }
+  .header h1 span { color:#3b6fd4; }
+  .header p { color:#7a7a8c; font-size:15px; }
+  .cards {
+    max-width:960px; margin:30px auto; padding:0 20px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px;
+  }
+  .card {
+    background:#fff; border:1px solid #e8ecf5; border-radius:16px;
+    padding:22px; box-shadow:0 4px 14px rgba(60,90,160,0.06);
+  }
+  .card .icon { font-size:28px; margin-bottom:10px; }
+  .card h3 { font-size:17px; margin-bottom:6px; }
+  .card p { font-size:13.5px; color:#7a7a8c; line-height:1.6; }
+  .form-wrap { max-width:640px; margin:40px auto 80px; padding:0 20px; }
+  form {
+    background:#fff; border:1px solid #e8ecf5; border-radius:20px;
+    padding:32px; box-shadow:0 8px 24px rgba(60,90,160,0.08);
+  }
+  form h2 { font-size:22px; margin-bottom:20px; }
+  label { display:block; font-size:14px; font-weight:600; margin:16px 0 6px; color:#3a3a4a; }
+  input, select, textarea {
+    width:100%; padding:12px 14px; border:1.5px solid #e0e6f2; border-radius:10px;
+    font-size:14px; background:#fafbfe; transition:border-color .2s, box-shadow .2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline:none; border-color:#3b6fd4; box-shadow:0 0 0 3px rgba(59,111,212,0.12);
+  }
+  textarea { min-height:140px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:560px){ .row{ grid-template-columns:1fr; } }
+  button {
+    width:100%; margin-top:22px; padding:14px; border:none; border-radius:12px;
+    background:#3b6fd4; color:#fff; font-size:16px; font-weight:600; cursor:pointer;
+    transition:background .2s, transform .1s;
+  }
+  button:hover { background:#2f5cb5; }
+  button:active { transform:scale(0.98); }
+  .note { text-align:center; font-size:12.5px; color:#9a9aac; margin-top:14px; }
+  .toast {
+    display:none; position:fixed; bottom:30px; left:50%;
+    transform:translateX(-50%); background:#3b6fd4; color:#fff;
+    padding:12px 26px; border-radius:999px; font-size:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+  }
+  footer { text-align:center; padding:20px; color:#a8a8ba; font-size:12.5px; }
+</style>
+</head>
+<body>
+
+  <a class="lang-switch" href="index.html">🌐 中文</a>
+
+  <div class="header">
+    <div class="badge">HOUSE BURTON · SUGGESTION BOX</div>
+    <h1>House Burton <span>Suggestion Box</span></h1>
+    <p>Every idea makes Burton better 💡 Suggestions are sent straight to our inbox</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon">🎉</div>
+      <h3>Event Ideas</h3>
+      <p>Want a competition, party or house bonding activity? Suggest it and let's make it happen.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🤝</div>
+      <h3>Issue Feedback</h3>
+      <p>Running into a problem? You can also report it anonymously — we read every message.</p>
+    </div>
+    <div class="card">
+      <div class="icon">💬</div>
+      <h3>Any Other Ideas</h3>
+      <p>Anything that could make House Burton a better place — we want to hear it all.</p>
+    </div>
+  </div>
+
+  <div class="form-wrap">
+    <form id="suggestForm" action="https://formsubmit.co/austinhu530@126.com" method="POST">
+      <h2>📝 Write Your Suggestion</h2>
+
+      <input type="hidden" name="_subject" value="House Burton New Suggestion">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+
+      <div class="row">
+        <div>
+          <label>Your Name (optional)</label>
+          <input type="text" name="name" placeholder="Anonymous is fine too">
+        </div>
+        <div>
+          <label>Category</label>
+          <select name="category">
+            <option value="Event Idea">Event Idea</option>
+            <option value="Issue Feedback">Issue Feedback</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Your Suggestion</label>
+      <textarea name="message" placeholder="Say whatever is on your mind — we read everything…" required></textarea>
+
+      <button type="submit">Send Suggestion ✈️</button>
+      <p class="note">Submissions are emailed automatically to austinhu530@126.com</p>
+    </form>
+  </div>
+
+  <footer>Made with 💙 for House Burton</footer>
+  <div class="toast" id="toast">✅ Suggestion sent — thank you for your feedback!</div>
+
+  <script>
+    document.getElementById('suggestForm').addEventListener('submit', function(e){
+      const toast = document.getElementById('toast');
+      setTimeout(() => {
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3500);
+      }, 800);
+    });
+  </script>
+</body>
+</html>
