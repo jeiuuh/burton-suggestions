@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Burton 建议箱</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
+  body {
+    min-height:100vh;
+    background: linear-gradient(180deg, #fdfdfd 0%, #f2f7ff 100%);
+    color:#2b2b3a;
+  }
+  .header {
+    text-align:center;
+    padding: 60px 20px 30px;
+  }
+  .badge {
+    display:inline-block;
+    background:#e8f1ff;
+    color:#3b6fd4;
+    padding:6px 18px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:1px;
+    margin-bottom:16px;
+  }
+  .header h1 { font-size:38px; margin-bottom:10px; }
+  .header h1 span { color:#3b6fd4; }
+  .header p { color:#7a7a8c; font-size:15px; }
+  .cards {
+    max-width:960px;
+    margin:30px auto;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:18px;
+  }
+  .card {
+    background:#fff;
+    border:1px solid #e8ecf5;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 4px 14px rgba(60,90,160,0.06);
+  }
+  .card .icon { font-size:28px; margin-bottom:10px; }
+  .card h3 { font-size:17px; margin-bottom:6px; }
+  .card p { font-size:13.5px; color:#7a7a8c; line-height:1.6; }
+  .form-wrap {
+    max-width:640px;
+    margin:40px auto 80px;
+    padding:0 20px;
+  }
+  form {
+    background:#fff;
+    border:1px solid #e8ecf5;
+    border-radius:20px;
+    padding:32px;
+    box-shadow:0 8px 24px rgba(60,90,160,0.08);
+  }
+  form h2 { font-size:22px; margin-bottom:20px; }
+  label { display:block; font-size:14px; font-weight:600; margin:16px 0 6px; color:#3a3a4a; }
+  input, select, textarea {
+    width:100%;
+    padding:12px 14px;
+    border:1.5px solid #e0e6f2;
+    border-radius:10px;
+    font-size:14px;
+    background:#fafbfe;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline:none;
+    border-color:#3b6fd4;
+    box-shadow:0 0 0 3px rgba(59,111,212,0.12);
+  }
+  textarea { min-height:140px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:560px){ .row{ grid-template-columns:1fr; } }
+  button {
+    width:100%;
+    margin-top:22px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#3b6fd4;
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .2s, transform .1s;
+  }
+  button:hover { background:#2f5cb5; }
+  button:active { transform:scale(0.98); }
+  .note { text-align:center; font-size:12.5px; color:#9a9aac; margin-top:14px; }
+  .toast {
+    display:none;
+    position:fixed;
+    bottom:30px; left:50%;
+    transform:translateX(-50%);
+    background:#3b6fd4;
+    color:#fff;
+    padding:12px 26px;
+    border-radius:999px;
+    font-size:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+  }
+  footer { text-align:center; padding:20px; color:#a8a8ba; font-size:12.5px; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">HOUSE BURTON · SUGGESTION BOX</div>
+    <h1>House Burton <span>建议箱</span></h1>
+    <p>你的每一个想法，都能让 Burton 变得更好 💡 建议会发送到我们的邮箱</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="icon">🏠</div>
+      <h3>宿舍生活</h3>
+      <p>对宿舍环境、作息安排、公共设施有任何想法，欢迎告诉我们。</p>
+    </div>
+    <div class="card">
+      <div class="icon">🎉</div>
+      <h3>活动建议</h3>
+      <p>想办什么比赛、聚会或者团建？大胆提出来，我们一起实现。</p>
+    </div>
+    <div class="card">
+      <div class="icon">🤝</div>
+      <h3>问题反馈</h3>
+      <p>遇到问题或困扰也可以匿名反馈，我们会认真处理每一条。</p>
+    </div>
+  </div>
+
+  <div class="form-wrap">
+    <form id="suggestForm" action="https://formsubmit.co/austinhu530@126.com" method="POST">
+      <h2>📝 写下你的建议</h2>
+
+      <input type="hidden" name="_subject" value="House Burton 新建议">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+
+      <div class="row">
+        <div>
+          <label>你的名字（选填）</label>
+          <input type="text" name="name" placeholder="匿名也可以哦">
+        </div>
+        <div>
+          <label>类型</label>
+          <select name="category">
+            <option value="宿舍生活">宿舍生活</option>
+            <option value="活动建议">活动建议</option>
+            <option value="问题反馈">问题反馈</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
+      </div>
+
+      <label>你的建议</label>
+      <textarea name="message" placeholder="想说什么就写什么，我们都会认真看…" required></textarea>
+
+      <button type="submit">发送建议 ✈️</button>
+      <p class="note">提交后会自动发送邮件到 austinhu530@126.com</p>
+    </form>
+  </div>
+
+  <footer>Made with 💙 for House Burton</footer>
+  <div class="toast" id="toast">✅ 建议已提交，感谢你的反馈！</div>
+
+  <script>
+    document.getElementById('suggestForm').addEventListener('submit', function(e){
+      const toast = document.getElementById('toast');
+      setTimeout(() => {
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3500);
+      }, 800);
+    });
+  </script>
+</body>
+</html>
