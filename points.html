@@ -94,6 +94,23 @@
   }
   .toast.err { background:#e05a5a; }
   footer { text-align:center; padding:18px; color:#a8a8ba; font-size:12.5px; }
+  .admin-fab {
+    position:fixed; bottom:22px; right:22px;
+    background:#fff; border:1.5px solid #e0e6f2; border-radius:999px;
+    padding:10px 18px; font-size:13.5px; font-weight:600; color:#3b6fd4;
+    cursor:pointer; box-shadow:0 4px 14px rgba(60,90,160,0.15); z-index:50;
+  }
+  .admin-fab:hover { background:#eef4ff; }
+  .admin-mask { display:none; position:fixed; inset:0; background:rgba(40,50,80,0.35); z-index:55; }
+  .admin-modal {
+    display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:min(92vw,420px); max-height:88vh; overflow-y:auto;
+    background:#fff; border-radius:18px; padding:26px;
+    box-shadow:0 12px 40px rgba(30,50,100,0.25); z-index:60; border:1px solid #e8ecf5;
+  }
+  .admin-modal h2 { font-size:18px; margin-bottom:14px; }
+  .danger { background:#e05a5a !important; }
+  .danger:hover { background:#c94a4a !important; }
 </style>
 </head>
 <body>
@@ -155,6 +172,29 @@
         <h3 data-i18n="t_log">最近加分记录</h3>
         <div id="logBox"></div>
       </div>
+    </div>
+  </div>
+
+  <button class="admin-fab" id="adminFab" onclick="openAdmin()">🔐 Admin</button>
+  <div class="admin-mask" id="adminMask" onclick="closeAdmin()"></div>
+  <div class="admin-modal" id="adminModal">
+    <h2>🔐 管理员后台 / Admin Panel</h2>
+    <div id="adminLock">
+      <label>密码 / Password</label>
+      <input type="password" id="adminPwd" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')adminUnlock()">
+      <button class="main" onclick="adminUnlock()">解锁 / Unlock</button>
+      <div class="me-line" id="adminErr" style="color:#e05a5a;"></div>
+    </div>
+    <div id="adminPanel" style="display:none;">
+      <label>同学名字 / Student name</label>
+      <input type="text" id="admName" maxlength="20">
+      <label>分数 / Points（任意数字）</label>
+      <input type="number" id="admPts" value="5" min="1" max="9999">
+      <label>原因 / Reason（选填）</label>
+      <input type="text" id="admReason" maxlength="60">
+      <button class="main" onclick="adminAdd()" id="admAddBtn">加分 / Add Points ✈️</button>
+      <button class="main danger" style="margin-top:12px;" onclick="adminClear()" id="admClearBtn">🗑️ 清零所有积分 / Clear ALL Points</button>
+      <button class="main" style="margin-top:12px; background:#8a93a8;" onclick="adminLockAgain()">🔒 锁定 / Lock</button>
     </div>
   </div>
 
@@ -344,6 +384,74 @@ async function init(){
     document.getElementById('lbBox').innerHTML = '<div class="empty">' + t('err_load') + '</div>';
   }
   render();
+}
+
+const ADMIN_PWD = 'houseburtonisthegoat';
+
+function openAdmin(){
+  document.getElementById('adminMask').style.display = 'block';
+  document.getElementById('adminModal').style.display = 'block';
+  if(sessionStorage.getItem('hb_admin') === '1'){ showAdminPanel(); }
+}
+function closeAdmin(){
+  document.getElementById('adminMask').style.display = 'none';
+  document.getElementById('adminModal').style.display = 'none';
+}
+function showAdminPanel(){
+  document.getElementById('adminLock').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+}
+function adminUnlock(){
+  if(document.getElementById('adminPwd').value === ADMIN_PWD){
+    sessionStorage.setItem('hb_admin','1');
+    document.getElementById('adminErr').textContent = '';
+    document.getElementById('adminPwd').value = '';
+    showAdminPanel();
+  } else {
+    document.getElementById('adminErr').textContent = '❌ 密码错误 / Wrong password';
+  }
+}
+function adminLockAgain(){
+  sessionStorage.removeItem('hb_admin');
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminLock').style.display = 'block';
+}
+async function adminAdd(){
+  const to = document.getElementById('admName').value.trim();
+  const pts = parseInt(document.getElementById('admPts').value);
+  if(!to){ toast(t('err_noname2'), true); return; }
+  if(!pts || pts < 1 || pts > 9999){ toast(t('err_num'), true); return; }
+  const btn = document.getElementById('admAddBtn');
+  btn.disabled = true;
+  try{
+    await loadData();
+    scores[to] = (scores[to] || 0) + pts;
+    const reason = document.getElementById('admReason').value.trim();
+    log.unshift({ to, pts, reason, by: 'ADMIN', time: Date.now() });
+    log = log.slice(0, 20);
+    await pushData();
+    toast(t('ok_add'));
+    document.getElementById('admName').value = '';
+    document.getElementById('admReason').value = '';
+    render();
+  }catch(e){ toast(t('err_add'), true); }
+  btn.disabled = false;
+}
+async function adminClear(){
+  const c1 = confirm(LANG === 'zh' ? '确定要清零所有积分吗？此操作不可恢复！' : 'Clear ALL points? This cannot be undone!');
+  if(!c1) return;
+  const c2 = confirm(LANG === 'zh' ? '再确认一次：真的要清空所有人的积分吗？' : 'Confirm again: really clear EVERYONE\'s points?');
+  if(!c2) return;
+  const btn = document.getElementById('admClearBtn');
+  btn.disabled = true;
+  try{
+    scores = {};
+    log.unshift({ to: 'ALL', pts: 0, reason: LANG === 'zh' ? '管理员清零了所有积分' : 'Admin cleared all points', by: 'ADMIN', time: Date.now() });
+    await pushData();
+    toast(LANG === 'zh' ? '🗑️ 已清零所有积分' : '🗑️ All points cleared');
+    render();
+  }catch(e){ toast(t('err_add'), true); }
+  btn.disabled = false;
 }
 
 applyLang();
